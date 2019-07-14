@@ -64,16 +64,18 @@ class GameState {
 
   get verticalWin() { //ToDo: Fix this function as it currently counts as a win with only 3
     let columns = [[],[],[],[],[],[]];
-    for(let row = 0; row < 7; row++){
-      for(let column = 0; column < 6; column ++){
-        const point = row*6+column;
-        columns[column][row] = this.state[point];
+    const state = this.state.map(i => i) //get state by value
+
+    for(let y = 0; y < 7; y++){
+      let row = state.splice(0,6);
+      for(let i = 0; i < 6; i++){
+        columns[i].push(row[i]);
       }
     }
     columns = columns.map(column => column.join(","));
     for(let column of columns){
-      if(column.includes("0,0,0,0")) return 0;
-      if(column.includes("1,1,1,1")) return 1;
+      if(column.includes("0,0,0,0,") || column.endsWith("0,0,0,0")) return 0;
+      if(column.includes("1,1,1,1,") || column.endsWith("1,1,1,1")) return 1;
     }
 
     return false;
@@ -89,8 +91,8 @@ class GameState {
     }
 
     for(let row of rows.map(row => row.join(","))){
-      if(row.includes("0,0,0,0")) return 0;
-      if(row.includes("1,1,1,1")) return 1;
+      if(row.includes("0,0,0,0,") || row.endsWith("0,0,0,0")) return 0;
+      if(row.includes("1,1,1,1,") || row.endsWith("1,1,1,1")) return 1;
     }
 
     return false;
@@ -114,8 +116,8 @@ class GameState {
           column = startingPoint[0]+i;
         line.push(this.state[row*6+column]);
       }
-      if(line.join(",").includes("0,0,0,0")) return 0;
-      if(line.join(",").includes("1,1,1,1")) return 1;
+      if(line.includes("0,0,0,0,") || line.endsWith("0,0,0,0")) return 0;
+      if(line.includes("1,1,1,1,") || line.endsWith("1,1,1,1")) return 1;
     }
     return false;
   }
