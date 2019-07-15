@@ -5,9 +5,23 @@
   "main": "index.js",
   "author": "Michael Van Der Velden",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test",
+    "test:coverage": "nyc node test"
+  },
   "dependencies": {
     "brain.js": "^1.6.1",
     "csv-parse": "^4.4.3",
     "readline-sync": "^1.4.9"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2",
+    "tape": "^4.11.0"
   }
 }
