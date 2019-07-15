@@ -98,7 +98,7 @@ class GameState {
     return false;
   }
 
-  get diagonalWin() {
+  get diagonalWin() { //bug where diagnals are only recognised going upwards to the right
     const startingPoints = [
       [0,6],
       [0,5],
