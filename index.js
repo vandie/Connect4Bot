@@ -116,8 +116,9 @@ class GameState {
           column = startingPoint[0]+i;
         line.push(this.state[row*6+column]);
       }
-      if(line.includes("0,0,0,0,") || line.endsWith("0,0,0,0")) return 0;
-      if(line.includes("1,1,1,1,") || line.endsWith("1,1,1,1")) return 1;
+      const lineString = line.join(",")
+      if(lineString.includes("0,0,0,0,") || lineString.endsWith("0,0,0,0")) return 0;
+      if(lineString.includes("1,1,1,1,") || lineString.endsWith("1,1,1,1")) return 1;
     }
     return false;
   }
@@ -159,7 +160,10 @@ class Mind {
     try{
       let data = await afs.readFile(options.dataFile,"utf8");
       data = data.split("\n");
-      data.map(line => line.split(",").map(num => parseInt(num)));
+      data = data.map(line => {
+        let splitLine = line.split(",");
+        return splitLine.map(num => parseInt(num));
+      });
       this.trainingData = data;
     } catch(e) {
       console.error("Failed to read training data",e);
@@ -169,17 +173,16 @@ class Mind {
 
   async saveTrainingData(){
     try{
-      console.log("Reading Training Data");
+      console.log("Saving Training Data");
       await afs.writeFile(
         options.dataFile,
         this.trainingData.map(
           line => line.join(",")
         ).join("\n"),
-        "utf8"
       );
       console.log("Training Data Read");
     } catch(e) {
-      console.error("Failed to save training data");
+      console.error("Failed to save training data",e);
     }
   }
 
@@ -199,14 +202,8 @@ class Mind {
 
   async nextMove(currentState) {
     const suggestedMoves = this.mind.run(currentState);
-    let suggestedMove = suggestedMoves.split(",");
-    suggestedMove.shift();
-    suggestedMove = parseInt(suggestedMove[0]);
-    if(typeof suggestedMove !== "number"){
-      console.error("AI Error");
-      process.exit(1);
-    }
-    if(Math.random()*1000 > this.trainingData.length){
+    const suggestedMove = parseInt(suggestedMoves[0]);
+    if(Math.random()*100 > 15){
       return Math.floor(Math.random() * 6);
     }
 
@@ -228,9 +225,8 @@ const gameLoop = async (mind,game) => {
   if(game.moves.length % 2 == 1 || game.moves.length === 1){
     try {
       const AIChoice = await mind.nextMove(game.moves);
-      game.play(AIChoice,1);
       console.log(`The Neural Network decided to play on column ${AIChoice+1}`);
-      
+      game.play(AIChoice,1);      
     } catch(e) {
       console.error(e);
       process.exit(1);
@@ -242,7 +238,7 @@ const gameLoop = async (mind,game) => {
   }else{
     console.log(game.visualGrid);
     if(game.win.winner === 1){
-      mind.trainingData.push(moves);
+      mind.trainingData.push(game.moves);
       console.log("AI Won. Saving for future refrence");
       await mind.saveTrainingData();
     }else {
@@ -256,6 +252,7 @@ const train = async () => {
   const mind = new Mind();
   
   await mind.loadTrainingData();
+  await mind.saveTrainingData();
   await mind.train(3000);
 
   console.log("starting new game...");
