@@ -8,7 +8,8 @@ const playSeries = (game, moves) => {
 };
 
 test("Gameplay Basics", async assert => {
-  assert.plan(8);
+  assert.plan(9);
+
   const game = new GameState();
   assert.deepEquals(
     game.state,
@@ -45,7 +46,16 @@ test("Gameplay Basics", async assert => {
 
   assert.throws(() => game.play(6, 1), '"column" must be a value under 5');
 
+  assert.equals(game.win, false, "A win is not reported when there is no win");
+
   assert.end();
+});
+
+test("Cannot add to a full collumn", async assert => {
+  assert.plan(1);
+  const game = new GameState();
+  playSeries(game, [[0, 0], [0, 1], [0, 0], [0, 1], [0, 0], [0, 1], [0, 0]]);
+  assert.throws(() => game.play(0, 1), "Cannot add to a ful collumn");
 });
 
 test("Grid, force initial state", async assert => {
@@ -244,10 +254,10 @@ test("Diagonal wins", async assert => {
   assert.deepEquals(
     game.win,
     {
-      winner: 0,
+      winner: 1,
       type: "diagonal"
     },
-    "Recognise diagonal to upper right player 0 win"
+    "Recognise diagonal to upper right player 1 win"
   );
 
   assert.end();

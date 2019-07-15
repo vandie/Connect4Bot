@@ -4,14 +4,6 @@ class GameState {
    * @param {[number]} data The Board as a 1D array. Must be 42 items long
    */
   constructor(data = Array(42).fill(0.5)) {
-    if (data.length !== 42) throw new Error("Invalid Game State");
-    data = data.map(point => {
-      try {
-        return parseFloat(point);
-      } catch (e) {
-        throw new Error("Invalid Game State");
-      }
-    });
     this.state = data;
     this.lastPlayer = 1;
     this.moves = [];
@@ -108,56 +100,54 @@ class GameState {
    * Return the player ID if there is a diagonal winner. False if no diagonal winner exists
    * @returns {0|1|false} A player ID or false
    */
+
   get diagonalWin() {
-    const startingPoints = [
-      [0, 6],
-      [5, 6],
-      [0, 5],
-      [5, 5],
-      [0, 4],
-      [5, 4],
-      [0, 3],
-      [5, 3],
-      [0, 2],
-      [5, 2],
-      [0, 1],
-      [5, 1],
-      [0, 0],
-      [1, 0],
-      [2, 0],
-      [3, 0],
-      [4, 0],
-      [5, 0]
-    ];
-    const lines = [];
+    const lines = [],
+      startingPoints = [
+        [1, 6],
+        [2, 6],
+        [3, 6],
+        [4, 6],
+        [5, 6],
+        [0, 6],
+        [0, 5],
+        [0, 4],
+        [0, 3],
+        [0, 1],
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0],
+        [4, 0],
+        [5, 0]
+      ];
+
     for (const startingPoint of startingPoints) {
-      const maxRight =
-          startingPoint[0] > 0 ? 6 - startingPoint[0] : 7 - startingPoint[1],
-        maxLeft = startingPoint[0] < 5 ? startingPoint[0] : startingPoint[1],
-        line1 = [],
-        line2 = [];
+      //get up line
+      const lineOne = [],
+        lineTwo = [],
+        x = startingPoint[0],
+        y = startingPoint[1];
 
-      for (let i = 0; i < maxRight; i++) {
-        const row = startingPoint[1] + i,
-          column = startingPoint[0] + i;
-        line1.push(this.state[row * 6 + column]);
+      for (let i = 0; x + i < 6 && y + i < 7; i++) {
+        const row = x + i,
+          column = y + i;
+        lineOne.push(this.state[row * 6 + column]);
       }
 
-      for (let i = maxLeft; i > 0; i--) {
-        const row = startingPoint[1] - i,
-          column = startingPoint[0] - i;
-        line2.push(this.state[row * 6 + column]);
+      for (let i = 0; x + i < 6 && y - i > 0; i++) {
+        const row = x + i,
+          column = y - i;
+        lineTwo.push(this.state[row * 6 + column]);
       }
-
-      lines.push(line1, line2);
+      if (lineOne.length > 4) lines.push(lineOne.join(","));
+      if (lineTwo.length > 4) lines.push(lineTwo.join(","));
     }
 
-    for (const l of lines) {
-      const line = l.join(",");
+    for (const line of lines) {
       if (line.includes("0,0,0,0,") || line.endsWith("0,0,0,0")) return 0;
       if (line.includes("1,1,1,1,") || line.endsWith("1,1,1,1")) return 1;
     }
-    return false;
   }
   /**
    * @typedef winningObject A Winner Object
