@@ -180,6 +180,13 @@ class GameState {
       };
     }
 
+    if (this.state.find(item => item !== 0.5) === undefined) {
+      return {
+        winner: null,
+        type: "draw"
+      };
+    }
+
     return false;
   }
 }

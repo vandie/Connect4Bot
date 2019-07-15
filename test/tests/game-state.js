@@ -1,4 +1,4 @@
-const GameState = require("../../src/GameState"),
+const GameState = require("../../src/game-state"),
   test = require("tape");
 
 const playSeries = (game, moves) => {

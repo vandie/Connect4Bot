@@ -64,10 +64,6 @@ class Mind {
   async nextMove(currentState) {
     const suggestedMoves = this.mind.run(currentState);
     const suggestedMove = parseInt(suggestedMoves[0]);
-    if (Math.random() * 100 > 15) {
-      return Math.floor(Math.random() * 6);
-    }
-
     return Math.floor(suggestedMove);
   }
 }

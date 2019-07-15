@@ -6,7 +6,8 @@
   "author": "Michael Van Der Velden",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
+    "start:pvs": "node ./src/player-v-ai.js",
+    "start:vs": "node ./src/ai-v-ai.js",
     "test": "node test",
     "test:coverage": "nyc node test"
   },

@@ -1,6 +1,6 @@
 const { question } = require("readline-sync"),
-  Mind = require("./Mind"),
-  GameState = require("./GameState");
+  Mind = require("./mind"),
+  GameState = require("./game-state");
 
 const gameLoop = async (mind, game) => {
   if (game.moves.length % 2 == 0 || game.moves.length === 0) {
@@ -23,7 +23,7 @@ const gameLoop = async (mind, game) => {
       game.play(AIChoice, 1);
     } catch (e) {
       console.error(e);
-      process.exit(1);
+      game.play(Math.floor(Math.random() * 6), 1);
     }
   }
 
@@ -38,7 +38,9 @@ const gameLoop = async (mind, game) => {
     } else {
       console.log("You Won via a " + game.win.type + " move");
     }
-    await train();
+
+    const newgame = new GameState();
+    gameLoop(mind, newgame);
   }
 };
 
@@ -47,11 +49,11 @@ const train = async () => {
 
   await mind.loadTrainingData();
   await mind.saveTrainingData();
-  await mind.train(3000);
+  await mind.train(600);
 
   console.log("starting new game...");
   const game = new GameState();
   await gameLoop(mind, game);
 };
 
-module.exports = train;
+train();
