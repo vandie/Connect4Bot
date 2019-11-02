@@ -217,9 +217,9 @@ cross-spawn@^4:
     lru-cache "^4.0.1"
     which "^1.2.9"
 
-csv-parse@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.4.3.tgz#a3fc56b6f54de88db76fbd34a55c091861522712"
+csv-parse@^4.4.6:
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.4.6.tgz#08804dbe86037c46810d49ced77fa0e121f83b4f"
 
 debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"

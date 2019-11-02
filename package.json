@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "brain.js": "^1.6.1",
-    "csv-parse": "^4.4.3",
+    "csv-parse": "^4.4.6",
     "readline-sync": "^1.4.9"
   },
   "devDependencies": {
